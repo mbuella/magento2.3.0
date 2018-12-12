@@ -4,8 +4,21 @@ services:
     build:
       context: .
       dockerfile: .docker/web/Dockerfile
-    image: magento2_web_nginx
+    image: magento2_nginx_web
     ports:
       - 80:80
     volumes:
-      - ./www:/var/www
+      - ./www:/var/www/mage2.ph
+    networks:
+      - magento2-nginx-network
+  fpm:
+    build:
+      context: .docker/fpm
+    image: magento2_nginx_fpm
+    volumes:
+      - ./www:/var/www/mage2.ph
+    networks:
+      - magento2-nginx-network
+networks:
+  magento2-nginx-network:
+    driver: bridge
