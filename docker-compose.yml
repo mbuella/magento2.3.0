@@ -32,6 +32,7 @@ services:
       - magento2-nginx-network
     links:
       - db
+      - rabbitmq
   db:
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
@@ -43,12 +44,16 @@ services:
       MYSQL_PASSWORD: AdminDb.1234
     volumes:
       - mage2_db:/var/lib/mysql
+    networks:
+      - magento2-nginx-network
   rabbitmq:
     image: rabbitmq:3.7.8-alpine
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: mage2_rmq_user
       RABBITMQ_DEFAULT_PASS: AdminRmq.1234
+    networks:
+      - magento2-nginx-network
 networks:
   magento2-nginx-network:
     driver: bridge
