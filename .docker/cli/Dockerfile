@@ -1,5 +1,16 @@
-FROM php:7.2.13-fpm
+FROM php:7.2.13-cli
 MAINTAINER Marlon Buella <marlon.b.buella@gmail.com>
+
+# Install composer
+RUN apt update && \
+    apt install git unzip wget -y && \
+    cd ~ && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php -r "if (hash_file('sha384', 'composer-setup.php') === '$(wget -q -O - https://composer.github.io/installer.sig)') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');"
+
+WORKDIR /var/www/mage2.ph
 
 # Install required PHP extensions and PECL modules.
   # RUN

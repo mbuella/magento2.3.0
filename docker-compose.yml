@@ -19,6 +19,39 @@ services:
       - ./www:/var/www/mage2.ph
     networks:
       - magento2-nginx-network
+    links:
+      - db
+  cli:
+    build:
+      context: .docker/cli
+    image: magento2_nginx_cli
+    tty: true
+    volumes:
+      - ./www:/var/www/mage2.ph
+    networks:
+      - magento2-nginx-network
+    links:
+      - db
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Root.1234
+      MYSQL_DATABASE: mage2_db
+      MYSQL_USER: mage2_db_admin
+      MYSQL_PASSWORD: AdminDb.1234
+    volumes:
+      - mage2_db:/var/lib/mysql
+  rabbitmq:
+    image: rabbitmq:3.7.8-alpine
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: mage2_rmq_user
+      RABBITMQ_DEFAULT_PASS: AdminRmq.1234
 networks:
   magento2-nginx-network:
     driver: bridge
+
+volumes:
+  mage2_db:
