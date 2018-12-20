@@ -5,8 +5,11 @@ services:
       context: .
       dockerfile: .docker/web/Dockerfile
     image: magento2_nginx_web
+    # image: nginx:1.15-alpine
     ports:
       - 80:80
+    depends_on:
+      - fpm
     volumes:
       - ./www:/var/www/mage2.ph
     networks:
