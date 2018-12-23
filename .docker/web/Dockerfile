@@ -2,13 +2,12 @@ FROM nginx:1.15-alpine
 
 MAINTAINER Marlon Buella <marlon.b.buella@gmail.com>
 
-COPY www /var/www/mage2.ph
-COPY .docker/web/config/nginx-www.mage2.ph.conf /etc/nginx/conf.d/www.mage2.ph.conf
-COPY .docker/web/config/nginx.conf.mage /etc/nginx/conf.d/nginx.conf.mage
-COPY .docker/web/error-pages/50x.html /usr/share/nginx/error-pages/50x.html
-
 # Configure Nginx
-RUN mv -f /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.off
-RUN cd /var/www/mage2.ph && mkdir var generated  && chmod -R 777 var generated
+COPY config/nginx-www.mage2.ph.conf /etc/nginx/conf.d/www.mage2.ph.conf
+COPY config/nginx.conf.mage /etc/nginx/conf.d/nginx.conf.mage
+COPY error-pages/50x.html /usr/share/nginx/error-pages/50x.html
 
-RUN chown -R nginx:nginx /var/www/mage2.ph
+RUN mv -f /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.off
+#COPY scripts/entrypoint.sh /
+#ENTRYPOINT ["/entrypoint.sh"]
+#CMD ["nginx", "-g", "daemon off;"]

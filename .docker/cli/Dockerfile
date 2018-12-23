@@ -37,3 +37,9 @@ WORKDIR /var/www/mage2.ph
     && rm -r /var/lib/apt/lists/*
 
 RUN docker-php-ext-install bcmath
+
+# Add composer auth
+COPY config/composer/auth.json /root/.composer/auth.json
+
+# PHP custom ini settings
+COPY config/php/php.ini /usr/local/etc/php

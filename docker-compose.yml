@@ -2,10 +2,10 @@ version: '3'
 services:
   web:
     build:
-      context: .
-      dockerfile: .docker/web/Dockerfile
+      #context: .
+      #dockerfile: .docker/web/Dockerfile
+      context: .docker/web
     image: magento2_nginx_web
-    # image: nginx:1.15-alpine
     ports:
       - 80:80
     depends_on:
@@ -24,6 +24,10 @@ services:
       - magento2-nginx-network
     links:
       - db
+      - rabbitmq
+      - redis-session
+      - redis-cache
+      - elasticsearch
   cli:
     build:
       context: .docker/cli
@@ -36,6 +40,8 @@ services:
     links:
       - db
       - rabbitmq
+      - redis-session
+      - redis-cache
   db:
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
@@ -57,9 +63,32 @@ services:
       RABBITMQ_DEFAULT_PASS: AdminRmq.1234
     networks:
       - magento2-nginx-network
+  redis-cache:
+    image: redis:5.0.3-alpine
+    command: redis-server --requirepass Redis.1234
+    networks:
+      - magento2-nginx-network
+    volumes:
+      - redis-cache-data:/data
+  redis-session:
+    image: redis:5.0.3-alpine
+    command: redis-server --requirepass Redis.1234
+    networks:
+      - magento2-nginx-network
+    volumes:
+      - redis-session-data:/data
+  elasticsearch:
+    image: elasticsearch:5.6.14-alpine
+    networks:
+      - magento2-nginx-network
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
 networks:
   magento2-nginx-network:
     driver: bridge
 
 volumes:
   mage2_db:
+  redis-cache-data:
+  redis-session-data:
+  es-data:
