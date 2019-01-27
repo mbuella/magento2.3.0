@@ -11,8 +11,7 @@ services:
     depends_on:
       - fpm
     volumes:
-      # - ./www:/var/www/mage2.ph
-      - mage2_code:/var/www/mage2.ph
+      - ./www:/var/www/mage2.ph
     networks:
       - magento2-nginx-network
   fpm:
@@ -20,8 +19,7 @@ services:
       context: .docker/fpm
     image: magento2_nginx_fpm
     volumes:
-      # - ./www:/var/www/mage2.ph
-      - mage2_code:/var/www/mage2.ph
+      - ./www:/var/www/mage2.ph
     networks:
       - magento2-nginx-network
     links:
@@ -36,8 +34,7 @@ services:
     image: magento2_nginx_cli
     tty: true
     volumes:
-      # - ./www:/var/www/mage2.ph
-      - mage2_code:/var/www/mage2.ph
+      - ./www:/var/www/mage2.ph
     networks:
       - magento2-nginx-network
     links:
@@ -88,11 +85,10 @@ services:
       - es-data:/usr/share/elasticsearch/data
 networks:
   magento2-nginx-network:
-    driver: bridge
+    # driver: bridge
 
 volumes:
   mage2_db:
-  mage2_code:
   redis-cache-data:
   redis-session-data:
   es-data:
